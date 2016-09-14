@@ -398,6 +398,7 @@ function createContext(options = {}) {
 
       this.trigger('open');
 
+      //Added open event
       let openEvt = new CustomEvent('open', {
         bubbles: true,
         cancelable: true,
@@ -448,6 +449,7 @@ function createContext(options = {}) {
 
       this.trigger('close');
 
+      //Added close event
       let closeEvt = new CustomEvent('close', {
         bubbles: true,
         cancelable: true,
