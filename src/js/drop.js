@@ -20,7 +20,7 @@ function sortAttach(str) {
 function removeFromArray(arr, item) {
   let index;
   let results = [];
-  while((index = arr.indexOf(item)) !== -1) {
+  while ((index = arr.indexOf(item)) !== -1) {
     results.push(arr.splice(index, 1));
   }
   return results;
@@ -32,10 +32,10 @@ if ('ontouchstart' in document.documentElement) {
 }
 
 const transitionEndEvents = {
-  'WebkitTransition' : 'webkitTransitionEnd',
-  'MozTransition'    : 'transitionend',
-  'OTransition'      : 'otransitionend',
-  'transition'       : 'transitionend'
+  'WebkitTransition': 'webkitTransitionEnd',
+  'MozTransition': 'transitionend',
+  'OTransition': 'otransitionend',
+  'transition': 'transitionend'
 };
 
 let transitionEndEvent = '';
@@ -62,7 +62,7 @@ let allDrops = {};
 // Drop can be included in external libraries.  Calling createContext gives you a fresh
 // copy of drop which won't interact with other copies on the page (beyond calling the document events).
 
-function createContext(options={}) {
+function createContext(options = {}) {
 
   let drop = (...args) => new DropInstance(...args);
 
@@ -163,7 +163,11 @@ function createContext(options={}) {
     }
 
     _on(element, event, handler) {
-      this._boundEvents.push({element, event, handler});
+      this._boundEvents.push({
+        element,
+        event,
+        handler
+      });
       element.addEventListener(event, handler);
     }
 
@@ -313,12 +317,12 @@ function createContext(options={}) {
           clearTimeout(outTimeout);
         } else {
           inTimeout = setTimeout(() => {
-            this.open(event);
-            inTimeout = null;
-          }, (event.type === 'focus' ?
+              this.open(event);
+              inTimeout = null;
+            }, (event.type === 'focus' ?
               this.options.focusDelay :
               this.options.hoverOpenDelay) ||
-              this.options.openDelay);
+            this.options.openDelay);
         }
       };
 
@@ -327,12 +331,12 @@ function createContext(options={}) {
           clearTimeout(inTimeout);
         } else {
           outTimeout = setTimeout(() => {
-            this.close(event);
-            outTimeout = null;
-          }, (event.type === 'blur' ?
+              this.close(event);
+              outTimeout = null;
+            }, (event.type === 'blur' ?
               this.options.blurDelay :
               this.options.hoverCloseDelay) ||
-              this.options.closeDelay);
+            this.options.closeDelay);
         }
       };
 
@@ -394,11 +398,18 @@ function createContext(options={}) {
 
       this.trigger('open');
 
+      let openEvt = new CustomEvent('open', {
+        bubbles: true,
+        cancelable: true,
+      });
+
+      this.target.dispatchEvent(openEvt);
+
       drop.updateBodyClasses();
     }
 
     _transitionEndHandler(e) {
-      if (e.target !== e.currentTarget){
+      if (e.target !== e.currentTarget) {
         return;
       }
 
@@ -437,6 +448,13 @@ function createContext(options={}) {
 
       this.trigger('close');
 
+      let closeEvt = new CustomEvent('close', {
+        bubbles: true,
+        cancelable: true,
+      });
+
+      this.target.dispatchEvent(closeEvt);
+
       if (typeof this.tether !== 'undefined') {
         this.tether.disable();
       }
@@ -469,7 +487,11 @@ function createContext(options={}) {
       }
 
       for (let i = 0; i < this._boundEvents.length; ++i) {
-        const {element, event, handler} = this._boundEvents[i];
+        const {
+          element,
+          event,
+          handler
+        } = this._boundEvents[i];
         element.removeEventListener(event, handler);
       }
 

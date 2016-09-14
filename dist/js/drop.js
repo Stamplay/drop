@@ -1,4 +1,4 @@
-/*! tether-drop 1.4.1 */
+/*! tether-drop 1.4.2 */
 
 (function(root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -206,7 +206,11 @@ function createContext() {
     _createClass(DropInstance, [{
       key: '_on',
       value: function _on(element, event, handler) {
-        this._boundEvents.push({ element: element, event: event, handler: handler });
+        this._boundEvents.push({
+          element: element,
+          event: event,
+          handler: handler
+        });
         element.addEventListener(event, handler);
       }
     }, {
@@ -443,6 +447,13 @@ function createContext() {
 
         this.trigger('open');
 
+        var openEvt = new CustomEvent('open', {
+          bubbles: true,
+          cancelable: true
+        });
+
+        this.target.dispatchEvent(openEvt);
+
         drop.updateBodyClasses();
       }
     }, {
@@ -488,6 +499,13 @@ function createContext() {
         this.drop.addEventListener(transitionEndEvent, this.transitionEndHandler);
 
         this.trigger('close');
+
+        var closeEvt = new CustomEvent('close', {
+          bubbles: true,
+          cancelable: true
+        });
+
+        this.target.dispatchEvent(closeEvt);
 
         if (typeof this.tether !== 'undefined') {
           this.tether.disable();
